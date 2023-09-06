@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MonthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
@@ -39,11 +40,14 @@ Route::group([
     // $router->post('/intranet-users/{intranet_user}/sync-roles', [One\IntranetUserController::class, 'syncRoles']);
     // $router->apiResource('intranet-users', One\IntranetUserController::class)->except('delete');
 
-    // Portal Users
+    // Users
     $router->post('/users', [UserController::class, 'create']);
     $router->get('/users', [UserController::class, 'list']);
     $router->get('/users/{id}', [UserController::class, 'get']);
     $router->put('/users/{id}', [UserController::class, 'update']);
     $router->delete('/users/{id}', [UserController::class, 'delete']);
     // $router->post('/user/{id}/reset-password', [One\Intranet\UserController::class, 'resetPassword']);
+
+    // Months
+    $router->get('/months', [MonthController::class, 'list']);
 });

@@ -1,9 +1,10 @@
 <?php
 
-namespace Tests\Feature\User;
+namespace Tests\Feature\Month;
 
 use App\Enums\RoleType;
 use App\Institution;
+use App\Models\Month;
 use App\Role;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,28 +13,33 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Tests\TestCase;
 
-class ListUserTest extends TestCase
+class ListMonthTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_lists_users()
+    public function test_it_lists_months()
     {
         // prepare
         $user = $this->createUser();
 
-        $user2 = new User([
-            'name' => 'dev',
-            'email' => 'email@example.com',
+        $month = new Month([
+            'name' => 'Janeiro'
         ]);
+        $month->save();
 
-        $user2->password = bcrypt('123456');
-        $user2->save();
+        $month2 = new Month([
+            'name' => 'Fevereiro'
+        ]);
+        $month2->save();
+
 
         // act
-        $response = $this->actingAs($user)->getJson('/api/v1/users');
+        $response = $this->actingAs($user)->getJson('api/v1/months');
+
+        $response->dump();
 
         // check
-        $response->assertStatus(200);
+        $response->assertOk();
         // $response->assertJsonCount(2, 'data');
         // $response->assertJson(['data' => [
         //     ['avatar' => null],
