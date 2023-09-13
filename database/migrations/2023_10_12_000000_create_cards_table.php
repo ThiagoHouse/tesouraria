@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('months', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+        Schema::create('cards', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
+
+            // $table->foreign('user_id')
+            //     ->references('id')
+            //     ->on('users');
         });
     }
 
@@ -23,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('months');
+        Schema::dropIfExists('cards');
     }
 };

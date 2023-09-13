@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\MonthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -24,7 +25,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group([
     'prefix' => '/v1',
 ], function (Router $router) {
-    // // Permissions
+       // Users
+    $router->post('/users', [UserController::class, 'create']);
+    $router->get('/users', [UserController::class, 'list']);
+    $router->get('/users/{id}', [UserController::class, 'get']);
+    $router->put('/users/{id}', [UserController::class, 'update']);
+    $router->delete('/users/{id}', [UserController::class, 'delete']);
+    // $router->post('/user/{id}/reset-password', [One\Intranet\UserController::class, 'resetPassword']);
+
+    // Months
+    $router->get('/months', [MonthController::class, 'list']);
+    $router->post('/cards/{id}/months', [MonthController::class, 'create']);
+
+    // Cards
+    $router->post('/cards', [CardController::class, 'create']);
+    $router->get('/cards', [CardController::class, 'list']);
+    $router->get('/cards/{id}', [CardController::class, 'get']);
+
+     // // Permissions
     // $router->get('/intranet-permissions', [One\Intranet\Permission\IntranetPermissionController::class, 'list']);
     // $router->get('/intranet-permissions/{permission}', [One\Intranet\Permission\IntranetPermissionController::class, 'get']);
 
@@ -39,15 +57,4 @@ Route::group([
     // $router->delete('/intranet-users/{intranet_user}/avatar', [One\IntranetUserController::class, 'deleteAvatar']);
     // $router->post('/intranet-users/{intranet_user}/sync-roles', [One\IntranetUserController::class, 'syncRoles']);
     // $router->apiResource('intranet-users', One\IntranetUserController::class)->except('delete');
-
-    // Users
-    $router->post('/users', [UserController::class, 'create']);
-    $router->get('/users', [UserController::class, 'list']);
-    $router->get('/users/{id}', [UserController::class, 'get']);
-    $router->put('/users/{id}', [UserController::class, 'update']);
-    $router->delete('/users/{id}', [UserController::class, 'delete']);
-    // $router->post('/user/{id}/reset-password', [One\Intranet\UserController::class, 'resetPassword']);
-
-    // Months
-    $router->get('/months', [MonthController::class, 'list']);
 });

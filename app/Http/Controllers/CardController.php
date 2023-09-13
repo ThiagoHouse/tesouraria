@@ -4,34 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Card;
-use App\Models\Month;
 use App\Notifications\UserPasswordReseted;
 use App\User;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MonthController extends Controller
+class CardController extends Controller
 {
-    public function create(Request $request, $cardId)
-    {
-        // $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'short_name' => 'nullable|string|max:255',
-        // ]);
-        $card = Card::findOrFail($cardId);
-
-        $month = new Month([
-            'name' => $request->name,
-            'valor' => $request->valor,
-
-        ]);
-        $card->months()->save($month);
-
-        return new JsonResource($month);
-    }
-
-    public function list()
+    public function create(Request $request)
     {
         //$user = auth()->user();
 
@@ -39,12 +21,31 @@ class MonthController extends Controller
         //     throw new AuthorizationException();
         // }
 
-        $months = Month::all();
+        // $card = new Card([
+        //     'user_id' => $request->user_id
+        // ]);
+        $card = new Card([
+            'user_id' => $request->user
+        ]);
+        $card->save();
 
-        return $months;
-    }
+        return $card;
+    }    
+    
+     public function list()
+     {
+        //  $user = auth()->user();
 
-    public function get($id)
+        //   if (! $user) {
+        //       throw new AuthorizationException();
+        //   }
+
+         $card = Card::all();         
+
+         return $card;
+     }
+
+    public function get(Request $request, $id)
     {
         //$intranetUser = auth()->user();
 
@@ -52,9 +53,17 @@ class MonthController extends Controller
         //     throw new AuthorizationException();
         // }
 
-        $user = User::findOrFail($id);
+        $builder = Card::query();
 
-        return $user;
+        if ($request->with){
+            $this->addRelations($builder, $request, ['months']);
+        }
+
+        // return new JsonResource($builder->findOrFail($id));
+
+        return $builder->findOrFail($id);
+        // $card = Card::findOrFail($id);
+        // return $card;
     }
 
     public function update(Request $request, $id)
@@ -109,4 +118,14 @@ class MonthController extends Controller
 
     //     return $code;
     // }
+
+    protected function addRelations(Builder $builder, Request $request, array $allowed)
+    {
+        if ($request->query('with') !== null) {
+            $relations = explode(',', $request->query('with'));
+            $safeRelations = array_intersect($allowed, $relations);
+            $builder->with($safeRelations);
+        }
+    }
 }
+

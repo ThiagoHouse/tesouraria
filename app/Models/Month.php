@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Month extends Model
 {
@@ -15,6 +16,13 @@ class Month extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name'
+        'name',
+        'valor',
+        'card_id'
     ];
+
+    public function card(): BelongsTo
+    {
+        return $this->belongsTo(Card::class);
+    }
 }
